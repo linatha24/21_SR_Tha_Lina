@@ -36,10 +36,11 @@ The system indexes local knowledge base documents (`.txt`, `.md`, `.pdf`), perfo
 ```text
 Demo-RAG/
 ├── app/
+│   ├── chunking.py       # Text chunking logic with configurable size and overlap
 │   ├── config.py         # System configuration (models, chunking, top-k, prompts)
 │   ├── embeddings.py     # Unified embedding interface via Ollama
-│   ├── generator.py       # Prompt augmentation and LLM answer generation
-│   ├── ingestion.py         # Document parsing, chunking, embedding, and indexing
+│   ├── generator.py      # Prompt augmentation and LLM answer generation
+│   ├── ingestion.py      # Document parsing, embedding, and indexing into ChromaDB
 │   ├── main.py           # Interactive CLI chat interface
 │   ├── pipeline.py       # End-to-end RAG pipeline coordination
 │   ├── retriever.py      # Semantic search and top-k chunk retrieval
@@ -51,7 +52,7 @@ Demo-RAG/
 ├── pyproject.toml        # Project dependencies and packaging settings
 ├── poetry.lock           # Locked dependency tree
 ├── Test_Log.md           # Benchmark log of test queries and responses
-├── Reflection.md         
+├── Reflection.md         # Retrospective analysis and improvement ideas
 └── README.md             # Project documentation
 ```
 
@@ -103,7 +104,7 @@ Place your knowledge base files into the `Data/` folder. The system supports:
 Run the ingestion script to process documents, create chunks, generate embeddings, and store them in ChromaDB:
 
 ```bash
-poetry run python -m app.ingest
+poetry run python -m app.ingestion
 ```
 
 Output:
@@ -179,9 +180,9 @@ All core hyperparameters and configurations can be modified in [`app/config.py`]
 
 ## How It Works
 
-1. **Ingestion (`app/ingestion.py`)**:
-   - Files are discovered in `Data/` and their plain text is extracted.
-   - Text is split into fixed-size chunks of 800 characters with 120-character overlap.
+1. **Document Ingestion & Chunking (`app/ingestion.py`, `app/chunking.py`)**:
+   - Files are discovered in `Data/` and their plain text is extracted (supporting `.txt`, `.md`, and `.pdf`).
+   - Text is split into fixed-size chunks of 800 characters with 120-character overlap via `app/chunking.py`.
    - Each chunk receives a deterministic ID (`<filename>::<chunk_index>`) and metadata containing the source file.
    - Embeddings are generated in batches via `ollama.embed()` and stored in a local ChromaDB collection.
 

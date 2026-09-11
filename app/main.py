@@ -5,10 +5,12 @@ Run it:
     poetry run python -m app.main
 
 Make sure you've built the index at least once first:
-    poetry run python -m app.ingest
+    poetry run python -m app.ingestion
 
 Type `exit` (or `quit`) to end the conversation.
 """
+import utils.transport
+import utils.session
 from app.pipeline import answer_question
 
 
@@ -28,7 +30,7 @@ def main() -> None:
             result = answer_question(question)
         except Exception as e:
             print(f"[error] Something went wrong: {e}\n"
-                  f"Did you run 'poetry run python -m app.ingest' first?\n")
+                  f"Did you run 'poetry run python -m app.ingestion' first?\n")
             continue
 
         print(f"\nBot: {result['answer']}\n")

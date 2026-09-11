@@ -7,7 +7,7 @@ whether a bad answer is a retrieval problem or a generation problem.
 Run:
     poetry run python -m scripts.test_queries
 
-Make sure you've run `poetry run python -m app.ingest` at least once first.
+Make sure you've run `poetry run python -m app.ingestion` at least once first.
 """
 from app.generator import generate_answer
 from app.retriever import retrieve

@@ -5,7 +5,7 @@ to be embedded.
 Flow: load files -> split into chunks -> embed each chunk -> store in Chroma.
 
 Run directly to (re)build the index from scratch:
-    poetry run python -m app.ingest
+    poetry run python -m app.ingestion
 """
 
 import os
@@ -14,11 +14,10 @@ from typing import List, Tuple
 import chromadb
 from chromadb.config import Settings
 from pypdf import PdfReader
+from app.chunking import chunk_text
 
 from app.config import (
     CHROMA_DB_DIR,
-    CHUNK_OVERLAP,
-    CHUNK_SIZE,
     COLLECTION_NAME,
     DATA_DIR,
 )
@@ -50,23 +49,6 @@ def load_documents(data_dir: str = DATA_DIR) -> List[Tuple[str, str]]:
         if text.strip():
             documents.append((filename, text))
     return documents
-
-# Chunking
-def chunk_text(text: str, chunk_size: int = CHUNK_SIZE, overlap: int = CHUNK_OVERLAP) -> List[str]:
-    """Fixed-size chunking with overlap."""
-    text = text.strip() #remove whitespace
-    if not text:
-        return []
-    chunks = []
-    start = 0
-    while start < len(text):
-        end = start + chunk_size
-        chunks.append(text[start:end])
-        if end >= len(text):
-            break
-        start = end - overlap  # step back so consecutive chunks share context
-    return chunks
-
 
 # ---------- Indexing ----------
 
