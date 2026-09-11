@@ -1,8 +1,6 @@
 """
 Connects the retriever and the generator into one flow: question in,
 grounded answer (+ the chunks it was grounded in) out.
-
-This is the single function main.py calls on every turn of the chat loop.
 """
 from typing import List, Optional, TypedDict
 

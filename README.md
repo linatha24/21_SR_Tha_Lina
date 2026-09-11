@@ -18,39 +18,6 @@ The system indexes local knowledge base documents (`.txt`, `.md`, `.pdf`), perfo
 
 ---
 
-## Architecture
-
-```
-[ Documents: .txt / .md / .pdf ]
-               │
-               ▼
-      ( Text Extraction )
-               │
-               ▼
-     ( Fixed Chunking + Overlap )
-               │
-               ▼
-  [ Ollama: nomic-embed-text ] ──► ( Vector Embeddings )
-                                           │
-                                           ▼
-                               [ ChromaDB Persistent Index ]
-                                           ▲
-═══════════════════════════════════════════╪═══════════════════════════════════════
- ONLINE QUERY PIPELINE                     │
-                                           │
-  [ User Query ] ──► [ Embed Query ] ──────┴──► [ Top-K Cosine Retrieval ]
-                                                         │
-                                                         ▼
-                                            [ Grounded Prompt Assembly ]
-                                                         │
-                                                         ▼
-                                             [ Ollama: qwen3:8b ]
-                                                         │
-                                                         ▼
-                                            [ Answer + Citations ]
-```
-
----
 
 ## Tech Stack
 
@@ -71,11 +38,11 @@ Demo-RAG/
 ├── app/
 │   ├── config.py         # System configuration (models, chunking, top-k, prompts)
 │   ├── embeddings.py     # Unified embedding interface via Ollama
-│   ├── generate.py       # Prompt augmentation and LLM answer generation
-│   ├── ingest.py         # Document parsing, chunking, embedding, and indexing
+│   ├── generator.py       # Prompt augmentation and LLM answer generation
+│   ├── ingestion.py         # Document parsing, chunking, embedding, and indexing
 │   ├── main.py           # Interactive CLI chat interface
 │   ├── pipeline.py       # End-to-end RAG pipeline coordination
-│   ├── retrieval.py      # Semantic search and top-k chunk retrieval
+│   ├── retriever.py      # Semantic search and top-k chunk retrieval
 │   └── vector_store.py   # ChromaDB client and collection management
 ├── Data/                 # Knowledge base documents (.txt, .md, .pdf)
 ├── chroma_db/            # Persisted ChromaDB vector store
@@ -84,6 +51,7 @@ Demo-RAG/
 ├── pyproject.toml        # Project dependencies and packaging settings
 ├── poetry.lock           # Locked dependency tree
 ├── Test_Log.md           # Benchmark log of test queries and responses
+├── Reflection.md         
 └── README.md             # Project documentation
 ```
 
